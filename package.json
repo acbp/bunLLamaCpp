@@ -1,8 +1,6 @@
 {
   "dependencies": {
-    "@huggingface/gguf": "^0.1.7",
-    "ansi-colors": "^4.1.3",
-    "cli-progress": "^3.12.0",
+    "cli-loading-animation": "^1.0.6",
     "node-llama-cpp": "^2.8.12"
   },
   "name": "bunllamacpp",
@@ -13,5 +11,8 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "script": {
+    "start": "bun --bun run index.js model.gguf"
   }
 }
