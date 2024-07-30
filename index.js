@@ -3,11 +3,11 @@ const colors = require('ansi-colors');
 
 // create new progress bar
 const b1 = new cliProgress.SingleBar({
-    format: '|' + colors.cyan('{bar}') + '| {percentage}% || {value}/{total} n',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true,
-	clearOnComplete: true,
+  format: '|' + colors.cyan('{bar}') + '| {percentage}% || {value}/{total} n',
+  barCompleteChar: '\u2588',
+  barIncompleteChar: '\u2591',
+  hideCursor: true,
+  clearOnComplete: true,
 });
 
 
@@ -26,19 +26,29 @@ const context = new LlamaContext({model});
 const session = new LlamaChatSession({context});
 
 const chat = async(txt)=>{
-//b1.start(context.getContextSize(), 0);
-const a = await session.prompt(
-	txt,
-	{
-	//maxTokens: context.getContextSize(),
-	threads: 2,
- onToken(chunk) {
-	  process.stdout.write(context.decode(chunk))
-	  // b1.increment();
-    // b1.update(context.decode(chunk).lenght);
-  }
-})
-return a;
+  //b1.start(context.getContextSize(), 0);
+  const a = await session.prompt(
+    txt,
+    {
+      maxTokens: context.getContextSize(),
+      threads: 2,
+      useMlock:1,
+      temperature: 0.8,
+
+      lastTokens: 128,
+      penalty: 1.12,
+      penalizeNewLine: false,
+      frequencyPenalty: 0.02,
+      presencePenalty: 0.02,
+
+      onToken(chunk) {
+        process.stdout.write(context.decode(chunk))
+        // b1.increment();
+        // b1.update(context.decode(chunk).lenght);
+      }
+    }
+  )
+  return a;
 }
 
 const readline = require('node:readline');
@@ -60,3 +70,7 @@ rl.on('line', async (input) => {
 
 setTimeout( console.clear, 1000,)
 setTimeout( console.info, 1100, "\b IA Carregada ! \b\n\b CHAT iniciado \b\n")
+process.on("SIGINT", () => {
+  console.log("Ctrl-C was pressed");
+  process.exit();
+});

@@ -174,3 +174,6 @@ dist
 # Finder (MacOS) folder config
 .DS_Store
 bun.lockb
+models
+model.gguf 
+Phi-3-mini-4k-instruct-q4.gguf
